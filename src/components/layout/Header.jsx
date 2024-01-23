@@ -38,7 +38,7 @@ function AuthLinks ({ status, userName }) {
 }
 
 export default function Header () {
-  const session = useSession()
+  const session =  useSession()
   const status = session?.status
   const userData = session.data?.user
   let userName = userData?.name || userData?.email
@@ -47,6 +47,7 @@ export default function Header () {
   if (userName && userName.includes(' ')) {
     userName = userName.split(' ')[0]
   }
+  console.log(session)
   return (
     <header>
       <div className='flex items-center md:hidden justify-between'>

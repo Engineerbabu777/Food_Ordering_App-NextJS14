@@ -1,44 +1,58 @@
 import GoogleProvider from 'next-auth/providers/google'
-import { NextAuth } from 'next-auth'
+import NextAuth from 'next-auth/next'
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 import clientPromise from '@/lib/mongoDB'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { UserInfo } from '@/models/UserInfo'
 import { User } from '@/models/User.model'
+import mongoose from 'mongoose'
+import bcrypt from 'bcryptjs'
 
 export const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
+  callbacks: {
+    session: async ({ token, session }) => {
+      if (session?.user && token?.sub) {
+        session.user.id = token.sub
+      }
+
+      return session
+    }
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET
     }),
     CredentialsProvider({
-      name: 'Credentials',
+      name: 'credentials',
       id: 'credentials',
-      credentials: {
-        username: {
-          label: 'Email',
-          type: 'email',
-          placeholder: 'test@example.com'
-        },
-        password: { label: 'Password', type: 'password' }
-      },
 
-      async authorize (credentials, req) {
+      async authorize (credentials) {
         const email = credentials?.email
-        const password = credentials?.password
 
-        mongoose.connect(process.env.MONGO_URL)
+        await mongoose.connect(process.env.MONGODB_URI)
         const user = await User.findOne({ email })
-        const passwordOk = user && bcrypt.compareSync(password, user.password)
 
-        if (passwordOk) {
-          return user
+        // EMAIL NOT EXISTS!
+        if (!user) {
+          throw new Error('Email is not registered')
         }
 
-        return null
+        // VERIFYING PASSWORD!
+        const isPasswordCorrect = await bcrypt.compare(
+          credentials.password,
+          user.password
+        )
+        // PASSWORD INCORRECT
+        if (!isPasswordCorrect) {
+          throw new Error('Incorect Password')
+        }
+
+        console.log({ user })
+
+        return {"happy":'appy'}
       }
     })
   ]
