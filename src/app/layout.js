@@ -1,6 +1,7 @@
 import { Roboto } from 'next/font/google'
 import './globals.css'
-import Header from "@/components/layout/Header.jsx";
+import Header from '@/components/layout/Header.jsx'
+import NextSessionProvider from '@/SessionProvider'
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
@@ -13,7 +14,15 @@ export default function RootLayout ({ children }) {
   return (
     <html lang='en'>
       <body className={roboto.className}>
-        <main className='max-w-4xl mx-auto border'>{children}</main>
+        <NextSessionProvider>
+          <main className='max-w-4xl mx-auto p-4'>
+            <Header />
+            {children}
+          </main>
+          <footer className='border-t p-8 text-center text-gray-500 mt-16'>
+            &copy; Babu Pizza🍕. 2023 All rights reserved
+          </footer>
+        </NextSessionProvider>
       </body>
     </html>
   )
