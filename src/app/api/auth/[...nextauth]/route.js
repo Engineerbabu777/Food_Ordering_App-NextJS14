@@ -7,6 +7,7 @@ import { UserInfo } from '@/models/UserInfo'
 import { User } from '@/models/User.model'
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import { getServerSession } from 'next-auth/next'
 
 export const authOptions = {
   secret: process.env.SECRET,
@@ -52,7 +53,7 @@ export const authOptions = {
 
         console.log({ user })
 
-        return {"happy":'appy'}
+        return { happy: 'appy' }
       }
     })
   ]
