@@ -6,6 +6,7 @@ export default function EditableImage ({ link, setLink }) {
     const files = ev.target.files
     if (files?.length === 1) {
       const files = ev.target.files
+      const url = 'http://api.cloudinary.com/v1_1/djo2k58eq/image/upload'
 
       const formData = new FormData()
       formData.append('file', files[0])
