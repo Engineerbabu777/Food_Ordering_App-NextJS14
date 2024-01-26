@@ -4,7 +4,8 @@ import Header from '@/components/layout/Header.jsx'
 import NextSessionProvider from '@/SessionProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
-import {Toaster} from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
+import { AppProvider } from '@/AppContext'
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 export const metadata = {
@@ -17,14 +18,16 @@ export default async function RootLayout ({ children }) {
     <html lang='en'>
       <body className={roboto.className}>
         <NextSessionProvider>
-          <main className='max-w-4xl mx-auto p-4'>
-          <Toaster />
-            <Header />
-            {children}
-          </main>
-          <footer className='border-t p-8 text-center text-gray-500 mt-16'>
-            &copy; Babu Pizza🍕. 2023 All rights reserved
-          </footer>
+          <AppProvider>
+            <main className='max-w-4xl mx-auto p-4'>
+              <Toaster />
+              <Header />
+              {children}
+            </main>
+            <footer className='border-t p-8 text-center text-gray-500 mt-16'>
+              &copy; Babu Pizza🍕. 2023 All rights reserved
+            </footer>
+          </AppProvider>
         </NextSessionProvider>
       </body>
     </html>
