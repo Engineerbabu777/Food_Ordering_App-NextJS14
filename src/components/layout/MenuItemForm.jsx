@@ -24,6 +24,31 @@ export default function MenuItemForm ({ onSubmit, menuItem }) {
     })
   }, [])
 
+  async function handleFileChange (ev) {
+    const files = ev.target.files
+    if (files?.length === 1) {
+      const files = ev.target.files
+      const url = 'http://api.cloudinary.com/v1_1/djo2k58eq/image/upload'
+
+      const formData = new FormData()
+      formData.append('file', files[0])
+      formData.append('upload_preset', 'new-data')
+
+      const uploadPromise = await fetch(url, {
+        method: 'POST',
+        body: formData
+      }).then(r => r.json().then())
+
+      setImage(uploadPromise.secure_url)
+
+      await toast.promise(uploadPromise, {
+        loading: 'Uploading...',
+        success: 'Upload complete',
+        error: 'Upload error'
+      })
+    }
+  }
+
   return (
     <form
       onSubmit={ev =>
@@ -48,11 +73,7 @@ export default function MenuItemForm ({ onSubmit, menuItem }) {
         </div>
         <div className='grow'>
           <label>Item name</label>
-          <input
-            type='text'
-            value={name}
-            onChange={ev => setName(ev.target.value)}
-          />
+          <input type='text' value={name} onChange={(ev)=> setName(ev.target.value)} />
           <label>Description</label>
           <input
             type='text'
@@ -62,7 +83,7 @@ export default function MenuItemForm ({ onSubmit, menuItem }) {
           <label>Category</label>
           <select
             value={category}
-            onChange={ev => setCategory(ev.target.value)}
+            onChange={ev => {setCategory(ev.target.value);console.log(ev.target.value)}}
           >
             {categories?.length > 0 &&
               categories.map(c => (
@@ -70,6 +91,9 @@ export default function MenuItemForm ({ onSubmit, menuItem }) {
                   {c.name}
                 </option>
               ))}
+              <option key={"n"} value={"34555"}>
+                  {"Nulla"}
+                </option>
           </select>
           <label>Base price</label>
           <input
