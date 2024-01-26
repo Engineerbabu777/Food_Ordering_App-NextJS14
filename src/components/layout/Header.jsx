@@ -1,5 +1,5 @@
 'use client'
-// import { CartContext } from '@/components/AppContext'
+import { CartContext } from '@/AppContext'
 import Bars2 from '@/components/icons/Bars2'
 import ShoppingCart from '@/components/icons/ShoppingCart'
 import { signOut, useSession } from 'next-auth/react'
@@ -42,7 +42,7 @@ export default function Header () {
   const status = session?.status
   const userData = session.data?.user
   let userName = userData?.name || userData?.email
-  const { cartProducts } = []
+  const { cartProducts } = useContext(CartContext)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   if (userName && userName.includes(' ')) {
     userName = userName.split(' ')[0]
