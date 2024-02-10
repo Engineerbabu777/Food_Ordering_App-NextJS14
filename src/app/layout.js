@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
 import { Toaster } from 'react-hot-toast'
 import { AppProvider } from '@/AppContext'
+
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 export const metadata = {
